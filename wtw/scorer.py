@@ -165,7 +165,9 @@ def score_student(level: str, feature_guide: pd.DataFrame, test: pd.DataFrame, n
     answer_sheet["words spelled correctly"] = correct_words
     answer_sheet.insert(0, "spelled words", list(word_guide["test_words"]))
 
-    stage = check_spelling_stage(level, feature_points)
+    # Per the WTW scoring guide, total = feature points + words spelled correctly
+    total_points = feature_points + sum(correct_words)
+    stage = check_spelling_stage(level, total_points)
     return name, stage, answer_sheet
 
 
