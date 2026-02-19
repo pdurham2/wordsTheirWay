@@ -174,7 +174,7 @@ def score_all(level: str, feature_guide: pd.DataFrame, test: pd.DataFrame):
     return results
 
 
-def write_output(out_path: str, results: list):
+def write_output(out_path, results: list):
     """Write scored results to an Excel workbook at out_path."""
     writer = pd.ExcelWriter(out_path, engine="xlsxwriter")
 
