@@ -37,11 +37,11 @@ if uploaded_file:
             st.stop()
         _, feature_guide = result
 
-        with st.spinner("Scoring..."):
-            results = score_all(level, feature_guide, test)
-
-        if results is None:
-            st.error("Scoring failed — one or more students are missing required features.")
+        try:
+            with st.spinner("Scoring..."):
+                results = score_all(level, feature_guide, test)
+        except ValueError as e:
+            st.error(str(e))
             st.stop()
 
         # Summary table

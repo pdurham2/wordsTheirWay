@@ -37,10 +37,11 @@ def main():
         if path is None:
             break
 
-        results = score_all(level, feature_guide, test)
-        if results is None:
-            print("Scoring failed due to missing data. Exiting.")
-            break
+        try:
+            results = score_all(level, feature_guide, test)
+        except ValueError as e:
+            print(e)
+            continue
 
         out_path = path.rsplit(".", 1)[0] + "_output.xlsx"
         write_output(out_path, results)

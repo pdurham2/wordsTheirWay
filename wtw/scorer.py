@@ -127,15 +127,15 @@ def _get_pattern(column: str, cell_value, template: str) -> str:
 def score_student(level: str, feature_guide: pd.DataFrame, test: pd.DataFrame, name: str):
     """Score a single student's spelling test.
 
-    Returns (name, stage, answer_sheet) or False if data is missing.
+    Returns (name, stage, answer_sheet) on success, or
+    {"error": str, "student": name, "missing": [...]} on failure.
     """
     words = test[name].rename("test_words")
     word_guide = feature_guide.merge(words, on="feature", how="left")
 
     if word_guide["test_words"].isna().any():
         missing = list(word_guide.loc[word_guide["test_words"].isna(), "feature"])
-        print(f"Missing features for {name}: {missing}")
-        return False
+        return {"error": "missing_features", "student": name, "missing": missing}
 
     answer_sheet = feature_guide.set_index("feature").map(lambda x: nan)
     feature_points = 0
@@ -170,10 +170,19 @@ def score_student(level: str, feature_guide: pd.DataFrame, test: pd.DataFrame, n
 
 
 def score_all(level: str, feature_guide: pd.DataFrame, test: pd.DataFrame):
-    """Score all students in the test DataFrame. Returns list of (name, stage, answer_sheet)."""
+    """Score all students in the test DataFrame.
+
+    Returns list of (name, stage, answer_sheet) on success, or
+    raises ValueError with a descriptive message if any student has missing features.
+    """
     results = [score_student(level, feature_guide, test, name) for name in test.columns]
-    if any(r is False for r in results):
-        return None
+    errors = [r for r in results if isinstance(r, dict) and r.get("error")]
+    if errors:
+        lines = [f"  • {e['student']}: {', '.join(e['missing'])}" for e in errors]
+        raise ValueError(
+            "The selected feature guide level does not match this workbook.\n"
+            "Missing words for:\n" + "\n".join(lines)
+        )
     return results
 
 
