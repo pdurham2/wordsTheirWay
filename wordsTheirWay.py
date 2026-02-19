@@ -1,5 +1,5 @@
 import pandas as pd
-from scorer import get_feature_guide, score_all, write_output
+from wtw.scorer import get_feature_guide, score_all, write_output
 
 LEVEL_PROMPT = """Enter the feature guide you want to use.
 Valid options are:

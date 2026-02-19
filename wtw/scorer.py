@@ -1,6 +1,9 @@
 import pandas as pd
+from pathlib import Path
 from re import match
 from numpy import nan
+
+FEATURE_GUIDES_DIR = Path(__file__).parent.parent / "data" / "feature_guides"
 
 
 SPELLING_STAGES = {
@@ -101,7 +104,7 @@ def get_feature_guide(selection: str):
     if s not in VALID_LEVELS:
         print("Valid options are: " + ", ".join(VALID_LEVELS))
         return None
-    feature_guide = pd.read_csv(s + ".csv")
+    feature_guide = pd.read_csv(FEATURE_GUIDES_DIR / (s + ".csv"))
     feature_guide.fillna(0, inplace=True)
     feature_guide.columns = [col.lower() for col in feature_guide.columns]
     return s, feature_guide

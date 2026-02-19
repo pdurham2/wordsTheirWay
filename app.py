@@ -1,7 +1,7 @@
 import io
 import pandas as pd
 import streamlit as st
-from scorer import get_feature_guide, score_all, write_output
+from wtw.scorer import get_feature_guide, score_all, write_output
 
 st.set_page_config(page_title="Words Their Way Scorer", page_icon="📝", layout="centered")
 
